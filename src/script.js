@@ -162,7 +162,7 @@ function leftClick(dom) {
     for (let y = posY - 1; y <= posY + 1; y++) {
       for (let x = posX - 1; x <= posX + 1; x++) {
         let dom = document.getElementById(`${y}-${x}`)
-        if (dom && dom.length != 0) {
+        if (dom) {
           if (!dom.classList.contains('check')) {
             dom.classList.add('check')
             leftClick(dom)
