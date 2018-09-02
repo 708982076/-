@@ -7,13 +7,13 @@ let GAMESTAUTS = 'gaming'
 let level = {
   low: {
     row: 10,
-    col: 20,
+    col: 12,
     thunders: 20,
     flags: 20
   },
   mid: {
     row: 12,
-    col: 12,
+    col: 20,
     thunders: 30,
     flags: 30
   },
@@ -53,15 +53,17 @@ let score = {
 }
 
 function init() {
-  renderDom(level[currentLv].row, level[currentLv].col)
+  let row = level[currentLv].row
+  let col = level[currentLv].col
+  renderDom(row, col)
   if (flag) {
     flag = false
     addEvent()
   }
   randomThunder(
     level[currentLv].thunders,
-    level[currentLv].col,
-    level[currentLv].row
+    col,
+    row
   )
 }
 function changeDom(lv) {
@@ -138,7 +140,6 @@ function overFn() {
   })
   setTimeout(() => {
     let conf = confirm("Game Over");
-    console.log(conf)
     conf && changeDom(currentLv)
   }, 300)
 }
@@ -175,24 +176,25 @@ function leftClick(dom) {
 function rightClick(e) {
   let target = e.target
   let isLei = store[target.id].isOver
-  if (score.flags <= 0) {
+  let scoreObj = score
+  if (scoreObj.flags <= 0) {
     if (target.classList.contains('flag-bg')) {
       target.classList.remove('flag-bg')
-      score.flags++
+      scoreObj.flags++
     }
     return
   }
   let isFlag = target.classList.toggle('flag-bg')
   if (isLei && isFlag) {
-    score.flags--
-    score.thunders--
+    scoreObj.flags--
+    scoreObj.thunders--
   } else if (!isLei && !isFlag) {
-    score.flags++
+    scoreObj.flags++
   } else if (isLei && !isFlag) {
-    score.flags++
-    score.thunders++
+    scoreObj.flags++
+    scoreObj.thunders++
   } else if (!isLei && isFlag) {
-    score.flags--
+    scoreObj.flags--
   }
 }
 init()
