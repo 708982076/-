@@ -65,9 +65,14 @@ function init() {
     col,
     row
   )
+  for (let key in store) {
+    if (store[key].isOver) {
+      console.log(key)
+    }
+  }
 }
 function changeDom(lv) {
-  if (lv != currentLv || GAMESTAUTS === 'over') {
+  if (lv != currentLv || GAMESTAUTS === 'over' || GAMESTAUTS === 'success') {
     store = {}
     row = level[lv].row
     col = level[lv].col
@@ -118,7 +123,7 @@ function renderDom(row, col) {
   let html = ``
   for (let y = 0; y < row; y++) {
     for (let x = 0; x < col; x++) {
-      html += `<li id=${y}-${x}></li>`
+      html += `<li id=${y}-${x}>${y}-${x}</li>`
       store[`${y}-${x}`] = { isOver: false }
     }
   }
@@ -140,6 +145,13 @@ function overFn() {
   })
   setTimeout(() => {
     let conf = confirm("Game Over");
+    conf && changeDom(currentLv)
+  }, 300)
+}
+function success() {
+  GAMESTAUTS = 'success'
+  setTimeout(() => {
+    let conf = confirm("success");
     conf && changeDom(currentLv)
   }, 300)
 }
@@ -177,24 +189,33 @@ function rightClick(e) {
   let target = e.target
   let isLei = store[target.id].isOver
   let scoreObj = score
+  if (target.classList.contains('show-bg')) {
+    return 
+  }
   if (scoreObj.flags <= 0) {
     if (target.classList.contains('flag-bg')) {
       target.classList.remove('flag-bg')
+      if (isLei) {
+        scoreObj.thunders++
+      }
       scoreObj.flags++
     }
     return
   }
   let isFlag = target.classList.toggle('flag-bg')
-  if (isLei && isFlag) {
-    scoreObj.flags--
-    scoreObj.thunders--
-  } else if (!isLei && !isFlag) {
-    scoreObj.flags++
-  } else if (isLei && !isFlag) {
+  if (isLei && !isFlag) {
     scoreObj.flags++
     scoreObj.thunders++
+  } else if (!isLei && !isFlag) {
+    scoreObj.flags++
+  } else if (isLei && isFlag) {
+    scoreObj.flags--
+    scoreObj.thunders--
   } else if (!isLei && isFlag) {
     scoreObj.flags--
+  }
+  if (scoreObj.thunders === 0) {
+    success()
   }
 }
 init()
