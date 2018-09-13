@@ -123,7 +123,7 @@ function renderDom(row, col) {
   let html = ``
   for (let y = 0; y < row; y++) {
     for (let x = 0; x < col; x++) {
-      html += `<li id=${y}-${x}>${y}-${x}</li>`
+      html += `<li id=${y}-${x}></li>`
       store[`${y}-${x}`] = { isOver: false }
     }
   }
@@ -176,7 +176,7 @@ function leftClick(dom) {
       for (let x = posX - 1; x <= posX + 1; x++) {
         let dom = document.getElementById(`${y}-${x}`)
         if (dom) {
-          if (!dom.classList.contains('check')) {
+          if (!dom.classList.contains('check') && !dom.classList.contains('flag-bg')) {
             dom.classList.add('check')
             leftClick(dom)
           }
